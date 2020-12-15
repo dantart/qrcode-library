@@ -84,7 +84,12 @@ class QrCode implements QrCodeInterface
     {
         $this->text = $text;
         $this->errorCorrectionLevel = $errorCorrectionLevel ?: ErrorCorrectionLevelInterface::LOW;
-        $this->writer = $writer ?: new PngWriter();
+        
+        $renderer = new \BaconQrCode\Renderer\ImageRenderer(
+            new \BaconQrCode\Renderer\RendererStyle\RendererStyle(400),
+            new \BaconQrCode\Renderer\Image\SvgImageBackEnd()
+        );
+        $this->writer = $writer ?: new \BaconQrCode\Writer($renderer);
     }
 
     /**
@@ -339,7 +344,7 @@ class QrCode implements QrCodeInterface
      */
     public function writeDataUri(): string
     {
-        return $this->writer->writeDataUri($this);
+        return $this->writer->writeString($this->text);
     }
 
     /**
